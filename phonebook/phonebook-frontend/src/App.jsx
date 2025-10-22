@@ -66,19 +66,25 @@ const App = () => {
         setNewName("");
         setNewNumber("");
 
-        axios.post("http://localhost:3001/persons", nameObject).then((response) => {
-            setPersons(persons.concat(response.data));
-            setAllPersons(allPersons.concat(response.data));
-            console.log(response);
+        axios
+            .post("http://localhost:3001/api/persons", nameObject)
+            .then((response) => {
+                setPersons(persons.concat(response.data));
+                setAllPersons(allPersons.concat(response.data));
+                console.log(response);
 
-            setMessageType("success");
-            setUpdateMessage(`Added ${response.data.name}`);
+                setMessageType("success");
+                setUpdateMessage(`Added ${response.data.name}`);
 
-            // Clear message after 5 seconds
-            setTimeout(() => {
-                setUpdateMessage("");
-            }, 5000);
-        });
+                // Clear message after 5 seconds
+                setTimeout(() => {
+                    setUpdateMessage("");
+                }, 5000);
+            })
+            .catch((error) => {
+                setMessageType("error");
+                setUpdateMessage(error.response?.data?.error || error.message);
+            });
     };
 
     const handleNumberChange = (event) => {
@@ -100,7 +106,7 @@ const App = () => {
 
     const deleteEntry = (id) => {
         console.log(id);
-        axios.delete(`http://localhost:3001/persons/${id}`, id).then((response) => {
+        axios.delete(`http://localhost:3001/api/persons/${id}`, id).then((response) => {
             console.log(`deleted ${id}`);
             console.log(response);
 
@@ -111,7 +117,7 @@ const App = () => {
     const updateNumber = (id, updatedPerson) => {
         console.log(id);
         axios
-            .put(`http://localhost:3001/persons/${id}`, updatedPerson)
+            .put(`http://localhost:3001/api/persons/${id}`, updatedPerson)
             .then((response) => {
                 console.log(`updated number for ${id}`);
                 console.log(response);
